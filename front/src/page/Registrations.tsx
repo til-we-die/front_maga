@@ -2,10 +2,10 @@ import useAuth from '../hooks/useAuth';
 import React, {useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import api from "../services/http-common";
-import {UserInfo} from "os";
+// import {UserInfo} from "os";
 
 const RegistrationForm = () => {
-    const { setAuth } = useAuth()
+    const { setToken } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
     const from = location.state?.from?.pathname || '/'
@@ -30,7 +30,7 @@ const RegistrationForm = () => {
     //     // Простая проверка заполненности полей
     //     if (username && email && password) {
     //         api.post('api/users', { username, email, password }).then((response) => {
-    //             setAuth(true); // указывает, что пользователь теперь авторизован.
+    //             setToken(true); // указывает, что пользователь теперь авторизован.
     //             const token = response.data.token;
     //             localStorage.setItem('token', token);
     //             // api.post(username).then((token) => {})
@@ -51,7 +51,10 @@ const RegistrationForm = () => {
         // Простая проверка заполненности полей
         if (username && email && password) {
             api.post('api/reg', { username, email, password }).then((response) => {
-                navigate('/Login', {replace: true}); // перенаправляет пользователя на страницу /dashboard
+                const token = response.data.token;
+                localStorage.setItem('token', token);
+                setToken(token);
+                navigate('/user', {replace: true});
             }).catch((e) => {
                 console.error('Ошибка при выполнении запроса:', e); // Логируем ошибку для отладки
                 alert('Не удалось выполнить запрос.'); // Показываем пользователю сообщение об ошибке
@@ -77,11 +80,6 @@ const RegistrationForm = () => {
                     value="Register"
                 />
             </form>
-
-            <button type="button" onClick={() => {
-                    setAuth(true);
-                    navigate(from, { replace: true });}}>Login
-            </button>
         </div>
     );
 };

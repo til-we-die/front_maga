@@ -1,14 +1,13 @@
 import useAuth from '../hooks/useAuth';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import React, {useState} from "react";
 import api from "../services/http-common";
 import '../trash/but_log.css'
 
 const Login = () => {
-    const { setAuth } = useAuth()
+    const { setToken } = useAuth()
     const navigate = useNavigate()
-    const location = useLocation()
-    const from = location.state?.from?.pathname || '/'
+    const s = 'ssssssss';
 
     const [state, setState] = useState<{
         username: string,
@@ -24,13 +23,11 @@ const Login = () => {
         const {username, email, password} = state
         // Простая проверка заполненности полей
         if (username && email && password) {
-            api.post('api/users', { username, email, password }).then((response) => {
-                setAuth(true); // указывает, что пользователь теперь авторизован.
+            api.post('api/users/', { username, email, password }).then((response) => {
                 const token = response.data.token;
                 localStorage.setItem('token', token);
-                // api.post(username).then((token) => {})
-                // localStorage.setItem('token', token)
-                navigate('/dashboard', {replace: true}); // перенаправляет пользователя на страницу /dashboard
+                setToken(token); // указывает, что пользователь теперь авторизован.
+                navigate('/user', {replace: true}); // перенаправляет пользователя на страницу
             }).catch((e) => {
                 console.error('Ошибка при выполнении запроса:', e); // Логируем ошибку для отладки
                 alert('Не удалось выполнить запрос.'); // Показываем пользователю сообщение об ошибке
@@ -63,9 +60,10 @@ const Login = () => {
 
                 </form>
             </div>
+
                 <button type={'button'} onClick={() => {
-                    setAuth(true)
-                    navigate(from, { replace: true });
+                    setToken(s)
+                    navigate('/user', { replace: true });
                 }}>Login</button>
 
         </>
