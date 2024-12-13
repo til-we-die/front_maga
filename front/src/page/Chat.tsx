@@ -1,5 +1,4 @@
 import React from "react";
-import '../trash/chat.css'
 // const Dialog = () =>{
 // //    имя, переписку,
 // }

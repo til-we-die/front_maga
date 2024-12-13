@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthProvider";
-import '../trash/logout.css'
 
 const Logout: React.FC = () => {
     const { clearToken } = useContext(AuthContext);
